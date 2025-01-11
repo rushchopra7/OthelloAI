@@ -1,6 +1,5 @@
 package de.lmu.bio.ifi;
 
-import de.lmu.bio.ifi.GameBoard;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -16,9 +15,6 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import szte.mi.Move;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class GameRunner extends Application {
@@ -55,23 +51,23 @@ public class GameRunner extends Application {
                 button.setMinSize(70, 70);
 
                 // Default style for all buttons #009067
-                String style = "-fx-background-color: #009067; -fx-border-color: black; -fx-border-radius: 0; -fx-background-radius: 0; -fx-border-width: 1px;";
+                String style = "-fx-background-color: #5f6a6a ; -fx-border-color: black; -fx-border-radius: 0; -fx-background-radius: 0; -fx-border-width: 1px;";
 
                 // Top-left corner: Top-left radius
                 if (i == 0 && j == 0) {
-                    style = "-fx-background-color: #009067; -fx-border-color: black; -fx-border-radius: 10 0 0 0; -fx-background-radius: 10 0 0 0; -fx-border-width: 1px;";
+                    style = "-fx-background-color: #5f6a6a; -fx-border-color: black; -fx-border-radius: 10 0 0 0; -fx-background-radius: 10 0 0 0; -fx-border-width: 1px;";
                 }
                 // Top-right corner: Top-right radius
                 else if (i == 0 && j == 7) {
-                    style = "-fx-background-color: #009067; -fx-border-color: black; -fx-border-radius: 0 10 0 0; -fx-background-radius: 0 10 0 0; -fx-border-width: 1px;";
+                    style = "-fx-background-color: #5f6a6a; -fx-border-color: black; -fx-border-radius: 0 10 0 0; -fx-background-radius: 0 10 0 0; -fx-border-width: 1px;";
                 }
                 // Bottom-left corner: Bottom-left radius
                 else if (i == 7 && j == 0) {
-                    style = "-fx-background-color: #009067; -fx-border-color: black; -fx-border-radius: 0 0 0 10; -fx-background-radius: 0 0 0 10; -fx-border-width: 1px;";
+                    style = "-fx-background-color: #5f6a6a; -fx-border-color: black; -fx-border-radius: 0 0 0 10; -fx-background-radius: 0 0 0 10; -fx-border-width: 1px;";
                 }
                 // Bottom-right corner: Bottom-right radius
                 else if (i == 7 && j == 7) {
-                    style = "-fx-background-color: #009067; -fx-border-color: black; -fx-border-radius: 0 0 10 0; -fx-background-radius: 0 0 10 0; -fx-border-width: 1px;";
+                    style = "-fx-background-color: #5f6a6a; -fx-border-color: black; -fx-border-radius: 0 0 10 0; -fx-background-radius: 0 0 10 0; -fx-border-width: 1px;";
                 }
 
                 button.setStyle(style);
@@ -89,11 +85,11 @@ public class GameRunner extends Application {
 
             // Reset the game board to initial state
             gameBoard.reset();
-            System.out.println("Board reset. Initial pieces set.");
+            //System.out.println("Board reset. Initial pieces set.");
 
             // Reset the current player to start again
             currentPlayer = GameBoard.BLACK;
-            System.out.println("Set current player to BLACK.");
+            //System.out.println("Set current player to BLACK.");
 
             // Reset AI configuration if applicable
             if (userColor == GameBoard.BLACK) {
@@ -102,15 +98,15 @@ public class GameRunner extends Application {
                 currentPlayer = GameBoard.WHITE;
             }
             ai.setGameBoard(gameBoard);
-            System.out.println("AI color set and board updated.");
+            //System.out.println("AI color set and board updated.");
 
             // Reinitialize the board display
             displayBoard();
-            System.out.println("Board display refreshed.");
+            //System.out.println("Board display refreshed.");
 
             // Reinvoke color selection if needed
             chooseColor();
-            System.out.println("Color selection reinvoked if applicable.");
+            //System.out.println("Color selection reinvoked if applicable.");
             if (userColor == GameBoard.WHITE) {
                 moveAI();
             }
@@ -149,7 +145,7 @@ public class GameRunner extends Application {
         borderPane.setRight(rightBox);
 
         Scene scene = new Scene(borderPane, 800, 570);
-        primaryStage.setTitle("Othello Game");
+        primaryStage.setTitle("OTHELLO GAME");
         primaryStage.getIcons().add(new Image("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT3pUrDq671YtRKXsaUpVNoi6MIL6S9k1KbRWmxAo64MR44EDyu"));
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -233,104 +229,8 @@ public class GameRunner extends Application {
         } else {
             System.out.println("It's not AI's turn. Current player: " + currentPlayer);
         } } */
-    /*  trial trial 2
+    //modified moveAI method to make it work with the new AI this works
     private void moveAI() {
-
-        if (currentPlayer != userColor) {
-            System.out.println("AI's turn. Current player: " + currentPlayer);
-
-            Move bestMove = null;
-            int bestScore = Integer.MIN_VALUE;
-
-            // Generate legal moves
-            ArrayList<Move> legalMoves = gameBoard.getLegalMoves(currentPlayer);
-            if (legalMoves.isEmpty()) {
-                System.out.println("No legal moves available for AI.");
-                announceWinner();
-                return;
-            }
-
-            // Evaluate each legal move
-            for (Move move : legalMoves) {
-                gameBoard.copy_old_state();
-                try {
-                    gameBoard.makeMove(move, currentPlayer);
-                    int score = ai.getEvaluation(gameBoard);
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestMove = move;
-                    }
-                } catch (Exception e) {
-                    System.out.println("Exception in making move: " + e.getMessage());
-                } finally {
-                    gameBoard.copy_old_state_back();
-                }
-            }
-
-            if (bestMove != null) {
-                System.out.println("AI chooses move: (" + bestMove.x + ", " + bestMove.y + ")");
-                gameBoard.makeMove(bestMove, currentPlayer);
-                currentPlayer = (currentPlayer == GameBoard.BLACK) ? GameBoard.WHITE : GameBoard.BLACK;
-                displayBoard();
-                ai.setGameBoard(gameBoard);
-
-                if (gameBoard.isGameOver(currentPlayer)) {
-                    announceWinner();
-                }
-            } else {
-                System.out.println("No valid move chosen.");
-            }
-        } else {
-            System.out.println("It's the user's turn.");
-        }
-    } */
-
-    //trial in an attempt to handle illegal moves
-    private void moveAI() {
-        if (currentPlayer != userColor) {
-            List<Move> legalMoves = gameBoard.getLegalMoves(currentPlayer);
-
-            if (legalMoves.isEmpty()) {
-                System.out.println("No legal moves available for AI.");
-                currentPlayer = (currentPlayer == GameBoard.BLACK) ? GameBoard.WHITE : GameBoard.BLACK;
-                return;
-            }
-
-            Move bestMove = null;
-            int bestScore = Integer.MIN_VALUE;
-
-            for (Move move : legalMoves) {
-                gameBoard.copy_old_state();
-                gameBoard.makeMove(move, ai.order);
-                int score = ai.getEvaluation(gameBoard);
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestMove = move;
-                }
-                gameBoard.copy_old_state_back();
-            }
-
-            if (bestMove != null && gameBoard.isValidMove(bestMove, currentPlayer)) {
-                System.out.println("AI's selected move: (" + bestMove.x + ", " + bestMove.y + ")");
-                gameBoard.makeMove(bestMove, ai.order);
-                currentPlayer = (currentPlayer == GameBoard.BLACK) ? GameBoard.WHITE : GameBoard.BLACK;
-                displayBoard();
-            } else {
-                System.out.println("AI attempted an invalid move.");
-            }
-
-            if (gameBoard.isGameOver(currentPlayer)) {
-                announceWinner();
-            }
-        }
-    }
-
-
-
-
-
-    //modified moveAI method to make it work with the new AI --this works
-    /*private void moveAI() {
         if (currentPlayer != userColor) {
             System.out.println("AI's turn. Current player: " + currentPlayer);
 
@@ -338,8 +238,7 @@ public class GameRunner extends Application {
             int bestScore = Integer.MIN_VALUE;
 
             for (Move move : gameBoard.getLegalMoves(currentPlayer)) {
-                if(gameBoard.isValidMove(move, currentPlayer)){
-                gameBoard.copy_old_state();
+                gameBoard.copy_old_state(); //cloning can also be used
                 gameBoard.makeMove(move, ai.order);
                 int score = ai.getEvaluation(gameBoard);
                 if (score > bestScore) {
@@ -347,7 +246,7 @@ public class GameRunner extends Application {
                     bestMove = move;
                 }
                 gameBoard.copy_old_state_back();
-            } }
+            }
 
             if (bestMove != null) {
                 System.out.println("AI move: (" + bestMove.x + ", " + bestMove.y + ")");
@@ -365,70 +264,13 @@ public class GameRunner extends Application {
         } else {
             System.out.println("It's the user's turn.");
         }
-    } */
-   /* it doesnt work..
-   private void moveAI() {
-        if (currentPlayer != userColor) { // Ensure it's AI's turn
-            System.out.println("AI's turn. Current player: " + currentPlayer);
-
-            Move bestMove = null;
-            int bestScore = Integer.MIN_VALUE;
-
-            // Retrieve legal moves for the AI's color
-            ArrayList<Move> legalMoves = gameBoard.getLegalMoves(currentPlayer);
-
-            // Check if legal moves are available
-            if (!legalMoves.isEmpty()) {
-                System.out.println("Legal moves for AI:");
-                for (Move move : legalMoves) {
-                    gameBoard.copy_old_state(); // Backup the current state
-
-                    // Make the move for evaluation
-                    gameBoard.makeMove(move, currentPlayer);
-
-                    // Evaluate the board for the AI's advantage
-                    int score = ai.getEvaluation(gameBoard);
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestMove = move;
-                    }
-
-                    // Revert to the original state
-                    gameBoard.copy_old_state_back();
-                }
-
-                // Execute the best move if available
-                if (bestMove != null) {
-                    System.out.println("AI move: (" + bestMove.x + ", " + bestMove.y + ")");
-                    gameBoard.makeMove(bestMove, currentPlayer); // Apply best move
-
-                    // Toggle the player for the next turn
-                    currentPlayer = (currentPlayer == GameBoard.BLACK) ? GameBoard.WHITE : GameBoard.BLACK;
-                    displayBoard();
-                    ai.setGameBoard(gameBoard);
-
-                    // Check if the game is over
-                    if (gameBoard.isGameOver(currentPlayer)) {
-                        announceWinner();
-                    }
-                } else {
-                    System.out.println("AI has no valid moves, skipping turn.");
-                    currentPlayer = (currentPlayer == GameBoard.BLACK) ? GameBoard.WHITE : GameBoard.BLACK;
-                }
-            } else {
-                System.out.println("No legal moves available for AI.");
-                currentPlayer = (currentPlayer == GameBoard.BLACK) ? GameBoard.WHITE : GameBoard.BLACK;
-            }
-        } else {
-            System.out.println("It's the user's turn.");
-        }
-    } */
+    }
 
 
 
 
     private void makeMove(int x, int y) {
-        Move move = new Move(x, y);
+        Move move = new Move(y, x);
         System.out.println("Move made at: (" + x + ", " + y + ") by " + (currentPlayer == GameBoard.BLACK ? "BLACK" : "WHITE"));
         if(currentPlayer==userColor){
             if (gameBoard.makeMove(move, currentPlayer)) {
